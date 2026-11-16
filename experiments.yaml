@@ -1,0 +1,46 @@
+# Every experiment = `common` + its own overrides. Change ONE variable per experiment vs the baseline.
+# Keys are passed straight to Ultralytics model.train() (except `model` and `desc`).
+common:
+  model: yolo11n.pt          # COCO-pretrained YOLO11 nano (same family as the LinkedIn reference)
+  data: data/helmet.yaml
+  epochs: 50
+  patience: 0                # no early stop -> all curves have the same length, easier to compare
+  imgsz: 640
+  batch: 16
+  optimizer: SGD             # fixed (default 'auto' silently switches optimizer and would confound E4)
+  lr0: 0.01
+  seed: 42
+  deterministic: true
+  plots: true
+
+experiments:
+  B0_baseline:
+    desc: YOLO11n COCO-pretrained, full fine-tune, default augmentation, SGD lr0=0.01
+
+  E1_scratch:                # variable: transfer learning
+    desc: Same architecture trained from random init (no COCO weights)
+    model: yolo11n.yaml
+    pretrained: false
+
+  E2_no_aug:                 # variable: data augmentation
+    desc: Baseline with all augmentation disabled
+    mosaic: 0.0
+    fliplr: 0.0
+    hsv_h: 0.0
+    hsv_s: 0.0
+    hsv_v: 0.0
+    translate: 0.0
+    scale: 0.0
+
+  E3_yolo11s:                # variable: model capacity (accuracy vs speed trade-off)
+    desc: Larger YOLO11s instead of YOLO11n
+    model: yolo11s.pt
+
+  E4_adamw:                  # variable: optimizer + learning rate (optional)
+    desc: AdamW lr0=0.001 instead of SGD lr0=0.01
+    optimizer: AdamW
+    lr0: 0.001
+
+  E5_freeze_backbone:        # variable: fine-tuning strategy (optional)
+    desc: Freeze first 10 layers (backbone), train neck + head only
+    freeze: 10

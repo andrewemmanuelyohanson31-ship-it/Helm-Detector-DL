@@ -1,0 +1,10 @@
+# datasets, trained runs and weights are large -> share via Drive / GitHub Release
+data/*/
+!data/helmet.yaml
+runs/
+weights/
+*.pt
+results/errors/
+__pycache__/
+.pytest_cache/
+.venv/

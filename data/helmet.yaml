@@ -1,0 +1,11 @@
+# Ultralytics dataset config. No `path:` key -> paths are relative to this file's folder (data/).
+# Roboflow exports call the validation folder "valid" -> change `val:` to helmet/valid/images.
+train: helmet/train/images
+val: helmet/val/images
+test: helmet/test/images
+
+# Must match the class ids inside your label files. Check with: python src/prepare_data.py stats
+names:
+  0: motorcycle
+  1: helmet
+  2: no_helmet
